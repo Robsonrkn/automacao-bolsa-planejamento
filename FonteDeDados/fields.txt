@@ -1,0 +1,10 @@
+shortName
+regularMarketTime
+Data da extração
+Hora da extração
+regularMarketPrice
+regularMarketDayHigh
+regularMarketDayLow
+regularMarketVolume
+symbol
+earningsPerShare

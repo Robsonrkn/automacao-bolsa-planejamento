@@ -9,10 +9,10 @@ i = 1
 j = 1
 cabecalho_feito = False
 
-itens_para_coletar = ["shortName", "regularMarketTime", "Data da extração", "Hora da extração", "regularMarketPrice",
-                      "regularMarketDayHigh", "regularMarketDayLow", "regularMarketVolume", "symbol",
-                      "earningsPerShare"]
-with open("C:\\Users\\robso\\Documents\\DadosAPI-Bolsa\\DadosBase\\Papel_Valor.csv", "r") as file:
+with open (".\\FonteDeDados\\fields.txt","r") as f:
+    itens_para_coletar = csv.reader(f, delimiter=";")
+    dados_itens_para_coletar = list(itens_para_coletar)
+with open(".\\FonteDeDados\\DadosBase\\Papel_Valor.csv", "r") as file:
     csv_papeis = csv.reader(file, delimiter=";")
 
     for row in csv_papeis:
@@ -29,27 +29,30 @@ with open("C:\\Users\\robso\\Documents\\DadosAPI-Bolsa\\DadosBase\\Papel_Valor.c
         except requests.exceptions.RequestException as e:
             print(f'Erro na requisição: {e}')
 
-        with open(f"C:\\Users\\robso\\Documents\\DadosAPI-Bolsa\\dadosDosAivosDaCarteira_{data_hoje}.csv", "a") as file:
+        with open(f".\\Resultado\\dadosDosAivosDaCarteira.csv", "a") as file:
             for item in dados['results']:
                 linha_new_csv = ""
                 cabecalho_csv = ""
 
                 for chave, valor in item.items():
-                    for metrica in itens_para_coletar:
-                        if str(chave).__contains__(str(metrica)):
+                    for metrica in dados_itens_para_coletar:
+                        rMetrica = str(metrica).replace("'", "").replace("[","").replace("]","")
+                        if str(chave).__contains__(str(rMetrica)):
                             cabecalho_csv += str(chave)
                             cabecalho_csv += ";"
                             #if str(chave) == "regularMarketTime":
                             #    cabecalho_csv += "Data da extração; Hora da extração;"
                     if cabecalho_feito == False and i >= len(item):
+                            cabecalho_csv = cabecalho_csv[:-1]
                             cabecalho_csv += '\n'
                             file.write(str(cabecalho_csv))
                             cabecalho_feito = True
                     else:
                         i += 1
                 for chave, valor in item.items():
-                    for metrica in itens_para_coletar:
-                        if str(chave).__contains__(str(metrica)):
+                    for metrica in dados_itens_para_coletar:
+                        rMetrica = str(metrica).replace("'", "").replace("[","").replace("]","")
+                        if str(chave).__contains__(str(rMetrica)):
                             if str(valor).__contains__(".") :
                                 linha_new_csv += str(valor).replace(".", ",")
                                 linha_new_csv += str(";")
@@ -62,6 +65,7 @@ with open("C:\\Users\\robso\\Documents\\DadosAPI-Bolsa\\DadosBase\\Papel_Valor.c
                             #    linha_new_csv += ";"
                             #    linha_new_csv += str(valor).split("T")[1].split(".")[0]
                     if j >= len(item):
+                        linha_new_csv = linha_new_csv[:-1]
                         linha_new_csv += '\n'
                         file.writelines(str(linha_new_csv))
                         j = 1
