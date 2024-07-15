@@ -7,7 +7,7 @@ data_hoje = date.today()
 data_hoje = data_hoje.strftime("%d_%m_%Y")
 i = 1
 j = 1
-cabecalho_feito = False
+cabecalho_feito = True
 
 with open (".\\FonteDeDados\\fields.txt","r") as f:
     itens_para_coletar = csv.reader(f, delimiter=";")
